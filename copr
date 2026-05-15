@@ -80,11 +80,12 @@ move-repo () {
         [ ! -d "$HOME/COPR" ] && mkdir -p "$HOME/COPR"
 
         run0 sh -c '
-                mv "$result" "$repofilebak" &&\
-                chown "$USER" "$repofilebak" &&\
-                echo 'COPR Repository "$reponame" removed.' ||\
-                echo "ERROR removing COPR repository."
-        '
+        if mv "$1" "$2" && chown "$3" "$2"; then
+            echo "COPR Repository $4 removed."
+        else
+            echo "ERROR: Failed to remove COPR repository."
+        fi
+        ' _ "${repofile:-}" "${repofilebak:-}" "${USER:-}" "${reponame:-}"
 }
 
 # Main loop
